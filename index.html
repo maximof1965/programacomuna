@@ -307,6 +307,24 @@
             </div>
         </div>
         
+        <!-- Botones de Operaciones desde Resultados de Búsqueda (sin INGRESO ni BUSQUEDA) -->
+        <div id="screen-operaciones-desde-busqueda" class="hidden">
+            <h1>LA COMUNA</h1>
+            <div class="subtitle">Artículo: <span id="operaciones-desde-busqueda-identificador"></span> | Turno: <span id="operaciones-desde-busqueda-turno"></span></div>
+            <div class="btn-grid">
+                <button class="btn-operation" onclick="mostrarFormulario('abono')">ABONO</button>
+                <button class="btn-operation" onclick="mostrarFormulario('pedir_sin_pagar')">PEDIR SIN PAGAR</button>
+                <button class="btn-operation" onclick="mostrarFormulario('intereses')">INTERESES</button>
+                <button class="btn-operation" onclick="mostrarFormulario('espera')">ESPERA</button>
+                <button class="btn-operation" onclick="mostrarFormulario('salida')">SALIDA</button>
+                <button class="btn-operation" onclick="mostrarFormulario('aumento')">AUMENTO</button>
+                <button class="btn-operation" onclick="mostrarFormulario('ventas')">VENTAS</button>
+            </div>
+            <div class="center" style="margin-top: 20px;">
+                <button class="btn btn-back" onclick="volverAInicio()">← Volver al Inicio</button>
+            </div>
+        </div>
+        
         <!-- Formulario INGRESO -->
         <div id="form-ingreso" class="hidden">
             <h1>INGRESO</h1>
@@ -609,12 +627,21 @@
         
         // Funciones de navegación
         function mostrarPantalla(id) {
+            // Ocultar todas las pantallas, formularios y mensajes
             document.querySelectorAll('[id^="screen"], [id^="form"], [id^="mensaje"]').forEach(el => {
-                el.classList.add('hidden');
+                if (el) {
+                    el.classList.add('hidden');
+                }
             });
+            
+            // Mostrar la pantalla solicitada
             const elemento = document.getElementById(id);
             if (elemento) {
                 elemento.classList.remove('hidden');
+                // Forzar visibilidad por si acaso
+                elemento.style.display = '';
+            } else {
+                console.error(`Error: No se encontró el elemento con ID "${id}"`);
             }
         }
         
@@ -661,9 +688,28 @@
         function seleccionarTurnoDesdeResultados(turno) {
             estado.turno = turno;
             estado.desdeResultados = true;
+            
+            // Asegurar que el identificador esté guardado
+            if (!estado.identificador) {
+                const identificadorElement = document.getElementById('resultados-identificador');
+                if (identificadorElement && identificadorElement.textContent) {
+                    estado.identificador = identificadorElement.textContent.trim();
+                }
+            }
+            
+            // Mostrar la pantalla de operaciones desde búsqueda
             mostrarPantalla('screen-operaciones-desde-busqueda');
-            document.getElementById('operaciones-desde-busqueda-identificador').textContent = estado.identificador;
-            document.getElementById('operaciones-desde-busqueda-turno').textContent = turno;
+            
+            // Actualizar los elementos de la pantalla inmediatamente
+            const identificadorEl = document.getElementById('operaciones-desde-busqueda-identificador');
+            const turnoEl = document.getElementById('operaciones-desde-busqueda-turno');
+            
+            if (identificadorEl) {
+                identificadorEl.textContent = estado.identificador || '';
+            }
+            if (turnoEl) {
+                turnoEl.textContent = turno;
+            }
         }
         
         // Mostrar búsqueda inicial
@@ -1168,16 +1214,40 @@
             // Guardar identificador del PRIMER artículo si existe
             if (listaArticulos.length > 0) {
                 const primerArticulo = listaArticulos[0];
-                const numero = primerArticulo.NUMERO || primerArticulo.numero || primerArticulo.Numero || '';
+                // Buscar el número en diferentes variaciones de mayúsculas/minúsculas
+                let numero = primerArticulo.NUMERO || primerArticulo.numero || primerArticulo.Numero || '';
+                
+                // Si no se encuentra, buscar en todas las claves
+                if (!numero) {
+                    for (let key in primerArticulo) {
+                        if (key.toUpperCase() === 'NUMERO') {
+                            numero = primerArticulo[key];
+                            break;
+                        }
+                    }
+                }
+                
                 if (numero) {
                     estado.identificador = String(numero).trim();
-                    document.getElementById('resultados-identificador').textContent = estado.identificador;
-                    document.getElementById('resultados-turno-buttons').classList.remove('hidden');
+                    const resultadosIdentificadorEl = document.getElementById('resultados-identificador');
+                    if (resultadosIdentificadorEl) {
+                        resultadosIdentificadorEl.textContent = estado.identificador;
+                    }
+                    const resultadosTurnoButtons = document.getElementById('resultados-turno-buttons');
+                    if (resultadosTurnoButtons) {
+                        resultadosTurnoButtons.classList.remove('hidden');
+                    }
                 } else {
-                    document.getElementById('resultados-turno-buttons').classList.add('hidden');
+                    const resultadosTurnoButtons = document.getElementById('resultados-turno-buttons');
+                    if (resultadosTurnoButtons) {
+                        resultadosTurnoButtons.classList.add('hidden');
+                    }
                 }
             } else {
-                document.getElementById('resultados-turno-buttons').classList.add('hidden');
+                const resultadosTurnoButtons = document.getElementById('resultados-turno-buttons');
+                if (resultadosTurnoButtons) {
+                    resultadosTurnoButtons.classList.add('hidden');
+                }
             }
             
             mostrarPantalla('screen-resultados-busqueda');
