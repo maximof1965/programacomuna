@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Casa de Empeño - COMUNA</title>
+    <title>LA COMUNA</title>
     <style>
         * {
             margin: 0;
@@ -262,7 +262,7 @@
     <div class="container">
         <!-- Pantalla Inicial -->
         <div id="screen-inicial">
-            <h1>Sistema Casa de Empeño</h1>
+            <h1>LA COMUNA</h1>
             <div class="form-group">
                 <label for="identificador-input">Número Identificador del Artículo:</label>
                 <input type="tel" id="identificador-input" placeholder="Ingrese 6 dígitos" maxlength="6" pattern="[0-9]{6}">
@@ -275,7 +275,7 @@
         
         <!-- Selección de Turno -->
         <div id="screen-turno" class="hidden">
-            <h1>Sistema Casa de Empeño</h1>
+            <h1>LA COMUNA</h1>
             <div class="subtitle">Artículo: <span id="turno-identificador"></span></div>
             <div class="subtitle center">Seleccione Turno:</div>
             <div class="center">
@@ -289,7 +289,7 @@
         
         <!-- Botones de Operaciones -->
         <div id="screen-operaciones" class="hidden">
-            <h1>Sistema Casa de Empeño</h1>
+            <h1>LA COMUNA</h1>
             <div class="subtitle">Artículo: <span id="operaciones-identificador"></span> | Turno: <span id="operaciones-turno"></span></div>
             <div class="btn-grid">
                 <button class="btn-operation" onclick="mostrarFormulario('ingreso')">INGRESO</button>
@@ -612,7 +612,10 @@
             document.querySelectorAll('[id^="screen"], [id^="form"], [id^="mensaje"]').forEach(el => {
                 el.classList.add('hidden');
             });
-            document.getElementById(id).classList.remove('hidden');
+            const elemento = document.getElementById(id);
+            if (elemento) {
+                elemento.classList.remove('hidden');
+            }
         }
         
         function volverAInicio() {
@@ -625,9 +628,13 @@
         
         function volverAOperaciones() {
             if (estado.desdeResultados) {
-                mostrarPantalla('screen-operaciones');
+                mostrarPantalla('screen-operaciones-desde-busqueda');
+                document.getElementById('operaciones-desde-busqueda-identificador').textContent = estado.identificador;
+                document.getElementById('operaciones-desde-busqueda-turno').textContent = estado.turno;
             } else {
                 mostrarPantalla('screen-operaciones');
+                document.getElementById('operaciones-identificador').textContent = estado.identificador;
+                document.getElementById('operaciones-turno').textContent = estado.turno;
             }
         }
         
@@ -654,9 +661,9 @@
         function seleccionarTurnoDesdeResultados(turno) {
             estado.turno = turno;
             estado.desdeResultados = true;
-            mostrarPantalla('screen-operaciones');
-            document.getElementById('operaciones-identificador').textContent = estado.identificador;
-            document.getElementById('operaciones-turno').textContent = turno;
+            mostrarPantalla('screen-operaciones-desde-busqueda');
+            document.getElementById('operaciones-desde-busqueda-identificador').textContent = estado.identificador;
+            document.getElementById('operaciones-desde-busqueda-turno').textContent = turno;
         }
         
         // Mostrar búsqueda inicial
@@ -803,7 +810,10 @@
             const abono = document.getElementById('abono-abono').value.trim();
             const descuento = document.getElementById('abono-descuento').value.trim();
             
+            // ABONO es obligatorio y debe ser válido
             let valido = validarNumero2a4Digitos(abono);
+            
+            // DESCUENTO es opcional: si está vacío está bien, si tiene valor debe ser válido
             if (descuento && !validarNumero2a4Digitos(descuento)) {
                 valido = false;
             }
@@ -1088,12 +1098,25 @@
         
         // Mostrar resultados de búsqueda
         function mostrarResultadosBusqueda(respuesta) {
-            let datosArticulo = {};
+            let listaArticulos = [];
             
-            if (Array.isArray(respuesta) && respuesta.length > 0) {
-                datosArticulo = respuesta[0];
-            } else if (typeof respuesta === 'object') {
-                datosArticulo = respuesta;
+            // Procesar la respuesta según su tipo - ahora maneja múltiples artículos
+            if (Array.isArray(respuesta)) {
+                // Si es una lista, procesar todos los elementos
+                for (let item of respuesta) {
+                    if (typeof item === 'object' && item !== null) {
+                        listaArticulos.push(item);
+                    }
+                }
+            } else if (typeof respuesta === 'object' && respuesta !== null) {
+                // Si es un dict, verificar diferentes estructuras
+                if (respuesta.data && Array.isArray(respuesta.data)) {
+                    listaArticulos = respuesta.data;
+                } else if (respuesta.data && typeof respuesta.data === 'object') {
+                    listaArticulos = [respuesta.data];
+                } else if (respuesta.hasOwnProperty('FECHA') || respuesta.hasOwnProperty('NUMERO') || respuesta.hasOwnProperty('fecha') || respuesta.hasOwnProperty('numero')) {
+                    listaArticulos = [respuesta];
+                }
             }
             
             const campos = [
@@ -1105,25 +1128,54 @@
             const container = document.getElementById('resultados-container');
             container.innerHTML = '';
             
-            campos.forEach(campo => {
-                const valor = datosArticulo[campo] || datosArticulo[campo.toUpperCase()] || datosArticulo[campo.toLowerCase()] || '';
-                const valorStr = valor ? String(valor) : '';
+            // Título con cantidad de resultados
+            const cantidad = listaArticulos.length;
+            const tituloCantidad = document.createElement('div');
+            tituloCantidad.style.cssText = 'text-align: center; margin-bottom: 15px; font-size: 14px; color: #555; font-weight: bold;';
+            tituloCantidad.textContent = `${cantidad} artículo${cantidad !== 1 ? 's' : ''} encontrado${cantidad !== 1 ? 's' : ''}`;
+            container.appendChild(tituloCantidad);
+            
+            // Mostrar cada artículo encontrado
+            listaArticulos.forEach((datosArticulo, idxArticulo) => {
+                // Separador visual entre artículos (excepto el primero)
+                if (idxArticulo > 0) {
+                    const separador = document.createElement('hr');
+                    separador.style.cssText = 'margin: 20px 0; border: 1px solid #ddd;';
+                    container.appendChild(separador);
+                }
                 
-                const item = document.createElement('div');
-                item.className = 'result-item';
-                item.innerHTML = `
-                    <span class="result-label">${campo}:</span>
-                    <span class="result-value">${valorStr || '(vacío)'}</span>
-                `;
-                container.appendChild(item);
+                // Título del artículo
+                const tituloArticulo = document.createElement('div');
+                tituloArticulo.style.cssText = 'color: darkblue; font-weight: bold; margin: 15px 0 10px 0; text-align: center; font-size: 13px;';
+                tituloArticulo.textContent = `--- ARTÍCULO ${idxArticulo + 1} ---`;
+                container.appendChild(tituloArticulo);
+                
+                // Mostrar todos los campos de este artículo
+                campos.forEach(campo => {
+                    const valor = datosArticulo[campo] || datosArticulo[campo.toUpperCase()] || datosArticulo[campo.toLowerCase()] || '';
+                    const valorStr = valor ? String(valor) : '';
+                    
+                    const item = document.createElement('div');
+                    item.className = 'result-item';
+                    item.innerHTML = `
+                        <span class="result-label">${campo}:</span>
+                        <span class="result-value">${valorStr || '(vacío)'}</span>
+                    `;
+                    container.appendChild(item);
+                });
             });
             
-            // Guardar identificador si existe
-            const numero = datosArticulo.NUMERO || datosArticulo.numero || '';
-            if (numero) {
-                estado.identificador = String(numero).trim();
-                document.getElementById('resultados-identificador').textContent = estado.identificador;
-                document.getElementById('resultados-turno-buttons').classList.remove('hidden');
+            // Guardar identificador del PRIMER artículo si existe
+            if (listaArticulos.length > 0) {
+                const primerArticulo = listaArticulos[0];
+                const numero = primerArticulo.NUMERO || primerArticulo.numero || primerArticulo.Numero || '';
+                if (numero) {
+                    estado.identificador = String(numero).trim();
+                    document.getElementById('resultados-identificador').textContent = estado.identificador;
+                    document.getElementById('resultados-turno-buttons').classList.remove('hidden');
+                } else {
+                    document.getElementById('resultados-turno-buttons').classList.add('hidden');
+                }
             } else {
                 document.getElementById('resultados-turno-buttons').classList.add('hidden');
             }
