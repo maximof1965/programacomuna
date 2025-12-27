@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Casa de Empeño - COMUNA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+            font-size: 14px;
+        }
+        
+        input[type="text"],
+        input[type="number"],
+        input[type="tel"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            font-family: inherit;
+        }
+        
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            font-weight: normal;
+            cursor: pointer;
+        }
+        
+        .radio-group input[type="radio"] {
+            margin-right: 8px;
+            width: auto;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+            margin: 5px;
+        }
+        
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            background: #45a049;
+        }
+        
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .btn-secondary {
+            background: #2196F3;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #0b7dda;
+        }
+        
+        .btn-back {
+            background: #757575;
+            color: white;
+        }
+        
+        .btn-back:hover {
+            background: #616161;
+        }
+        
+        .btn-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .btn-operation {
+            padding: 15px;
+            font-size: 14px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .btn-operation:hover {
+            background: #0b7dda;
+        }
+        
+        .btn-turno {
+            padding: 15px 30px;
+            font-size: 16px;
+            background: #FF9800;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 10px;
+        }
+        
+        .btn-turno:hover {
+            background: #F57C00;
+        }
+        
+        .success-message {
+            background: #4CAF50;
+            color: white;
+            padding: 20px;
+            border-radius: 4px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .error-message {
+            background: #f44336;
+            color: white;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        
+        .search-results {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 4px;
+            margin: 20px 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .result-label {
+            font-weight: 600;
+            color: #555;
+            min-width: 150px;
+        }
+        
+        .result-value {
+            color: #333;
+            flex: 1;
+        }
+        
+        .result-value:empty::before {
+            content: "(vacío)";
+            color: #999;
+            font-style: italic;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .center {
+            text-align: center;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 20px 0;
+            color: #333;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+            
+            .btn-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .btn-operation {
+                padding: 12px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Pantalla Inicial -->
+        <div id="screen-inicial">
+            <h1>Sistema Casa de Empeño</h1>
+            <div class="form-group">
+                <label for="identificador-input">Número Identificador del Artículo:</label>
+                <input type="tel" id="identificador-input" placeholder="Ingrese 6 dígitos" maxlength="6" pattern="[0-9]{6}">
+            </div>
+            <div class="center">
+                <button class="btn btn-primary" onclick="procesarIdentificador()">Continuar</button>
+                <button class="btn btn-secondary" onclick="mostrarBusquedaInicial()">BUSCAR</button>
+            </div>
+        </div>
+        
+        <!-- Selección de Turno -->
+        <div id="screen-turno" class="hidden">
+            <h1>Sistema Casa de Empeño</h1>
+            <div class="subtitle">Artículo: <span id="turno-identificador"></span></div>
+            <div class="subtitle center">Seleccione Turno:</div>
+            <div class="center">
+                <button class="btn btn-turno" onclick="seleccionarTurno('1')">TURNO 1</button>
+                <button class="btn btn-turno" onclick="seleccionarTurno('2')">TURNO 2</button>
+            </div>
+            <div class="center" style="margin-top: 20px;">
+                <button class="btn btn-back" onclick="volverAInicio()">← Volver al Inicio</button>
+            </div>
+        </div>
+        
+        <!-- Botones de Operaciones -->
+        <div id="screen-operaciones" class="hidden">
+            <h1>Sistema Casa de Empeño</h1>
+            <div class="subtitle">Artículo: <span id="operaciones-identificador"></span> | Turno: <span id="operaciones-turno"></span></div>
+            <div class="btn-grid">
+                <button class="btn-operation" onclick="mostrarFormulario('ingreso')">INGRESO</button>
+                <button class="btn-operation" onclick="mostrarFormulario('abono')">ABONO</button>
+                <button class="btn-operation" onclick="mostrarFormulario('pedir_sin_pagar')">PEDIR SIN PAGAR</button>
+                <button class="btn-operation" onclick="mostrarFormulario('intereses')">INTERESES</button>
+                <button class="btn-operation" onclick="mostrarFormulario('espera')">ESPERA</button>
+                <button class="btn-operation" onclick="mostrarFormulario('busqueda')">BUSQUEDA</button>
+                <button class="btn-operation" onclick="mostrarFormulario('salida')">SALIDA</button>
+                <button class="btn-operation" onclick="mostrarFormulario('aumento')">AUMENTO</button>
+                <button class="btn-operation" onclick="mostrarFormulario('ventas')">VENTAS</button>
+            </div>
+            <div class="center" style="margin-top: 20px;">
+                <button class="btn btn-back" onclick="volverAInicio()">← Volver al Inicio</button>
+            </div>
+        </div>
+        
+        <!-- Formulario INGRESO -->
+        <div id="form-ingreso" class="hidden">
+            <h1>INGRESO</h1>
+            <div class="form-group">
+                <label>NUMERO(ING) *</label>
+                <input type="tel" id="ingreso-numero" readonly>
+            </div>
+            <div class="form-group">
+                <label>VALOR (ING) *</label>
+                <input type="tel" id="ingreso-valor" placeholder="2-4 dígitos" maxlength="4" pattern="[0-9]{2,4}">
+            </div>
+            <div class="form-group">
+                <label>V RETIRO(ING) *</label>
+                <input type="tel" id="ingreso-v_retiro" placeholder="2-4 dígitos" maxlength="4" pattern="[0-9]{2,4}">
+            </div>
+            <div class="form-group">
+                <label>NOMBRE COMPLETO(ING) *</label>
+                <input type="text" id="ingreso-nombre_completo" pattern="[A-Za-záéíóúÁÉÍÓÚñÑ ]+">
+            </div>
+            <div class="form-group">
+                <label>CEDULA(ING) *</label>
+                <input type="tel" id="ingreso-cedula">
+            </div>
+            <div class="form-group">
+                <label>ART(ING) *</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="ingreso-art" value="MOV"> MOV</label>
+                    <label><input type="radio" name="ingreso-art" value="DOC"> DOC</label>
+                    <label><input type="radio" name="ingreso-art" value="OTRO"> OTRO</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>DESCRIPCION</label>
+                <textarea id="ingreso-descripcion" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+                <label>LLEVAR</label>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="ingreso-llevar">
+                    <label for="ingreso-llevar" style="display: inline;">NO LLEVAR</label>
+                </div>
+            </div>
+            <div class="center">
+                <button class="btn btn-back" onclick="volverAOperaciones()">← Atrás</button>
+                <button class="btn btn-primary" id="btn-enviar-ingreso" onclick="enviarDatos('ingreso')" disabled>Enviar</button>
+            </div>
+        </div>
+        
+        <!-- Formulario ABONO -->
+        <div id="form-abono" class="hidden">
+            <h1>ABONO</h1>
+            <div class="form-group">
+                <label>NUMERO(ABO) *</label>
+                <input type="tel" id="abono-numero" readonly>
+            </div>
+            <div class="form-group">
+                <label>ABONO *</label>
+                <input type="tel" id="abono-abono" placeholder="2-4 dígitos" maxlength="4" pattern="[0-9]{2,4}">
+            </div>
+            <div class="form-group">
+                <label>DESCUENTO(ABO)</label>
+                <input type="tel" id="abono-descuento" placeholder="2-4 dígitos" maxlength="4" pattern="[0-9]{2,4}">
+            </div>
+            <div class="form-group">
+                <label>RETIRO(ABO)</label>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="abono-retiro">
+                    <label for="abono-retiro" style="display: inline;">RETIRAR</label>
+                </div>
+                <label style="margin-top: 10px;">Otros:</label>
+                <input type="text" id="abono-otros">
+            </div>
+            <div class="center">
+                <button class="btn btn-back" onclick="volverAOperaciones()">← Atrás</button>
+                <button class="btn btn-primary" id="btn-enviar-abono" onclick="enviarDatos('abono')" disabled>Enviar</button>
+            </div>
+        </div>
+        
+        <!-- Formulario PEDIR SIN PAGAR -->
+        <div id="form-pedir_sin_pagar" class="hidden">
+            <h1>PEDIR SIN PAGAR</h1>
+            <div class="form-group">
+                <label>NUMERO(RET) *</label>
+                <input type="tel" id="pedir_sin_pagar-numero" readonly>
+            </div>
+            <div class="form-group">
+                <label>RETIRO</label>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="pedir_sin_pagar-retiro">
+                    <label for="pedir_sin_pagar-retiro" style="display: inline;">RETIRAR</label>
+                </div>
+            </div>
+            <div class="center">
+                <button class="btn btn-back" onclick="volverAOperaciones()">← Atrás</button>
+                <button class="btn btn-primary" onclick="enviarDatos('pedir_sin_pagar')">Enviar</button>
+            </div>
+        </div>
+        
+        <!-- Formulario INTERESES -->
+        <div id="form-intereses" class="hidden">
+            <h1>INTERESES</h1>
+            <div class="form-group">
+                <label>NUMERO(INT) *</label>
+                <input type="tel" id="intereses-numero" readonly>
+            </div>
+            <div class="form-group">
+                <label>INTERESES *</label>
+                <input type="tel" id="intereses-intereses" placeholder="2-4 dígitos" maxlength="4" pattern="[0-9]{2,4}">
+            </div>
+            <div class="center">
+                <button class="btn btn-back" onclick="volverAOperaciones()">← Atrás</button>
+                <button class="btn btn-primary" id="btn-enviar-intereses" onclick="enviarDatos('intereses')" disabled>Enviar</button>
+            </div>
+        </div>
+        
+        <!-- Formulario ESPERA -->
+        <div id="form-espera" class="hidden">
+            <h1>ESPERA</h1>
+            <div class="form-group">
+                <label>NUMERO(ESP) *</label>
+                <input type="tel" id="espera-numero" readonly>
+            </div>
+            <div class="form-group">
+                <label>ESPERAR</label>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="espera-esperar">
+                    <label for="espera-esperar" style="display: inline;">ESPERAR</label>
+                </div>
+            </div>
+            <div class="center">
+                <button class="btn btn-back" onclick="volverAOperaciones()">← Atrás</button>
+                <button class="btn btn-primary" onclick="enviarDatos('espera')">Enviar</button>
+            </div>
+        </div>
+        
+        <!-- Formulario BUSQUEDA -->
+        <div id="form-busqueda" class="hidden">
+            <h1>BUSQUEDA</h1>
+            <div class="form-group">
+                <label>NUMERO(BUS)</label>
+                <input type="tel" id="busqueda-numero" placeholder="6 dígitos" maxlength="6" pattern="[0-9]{6}">
+            </div>
+            <div class="form-group">
+                <label>NOMBRE COMPLETO(BUS)</label>
+                <input type="text" id="busqueda-nombre_completo" pattern="[A-Za-záéíóúÁÉÍÓÚñÑ ]+">
+            </div>
+            <div class="form-group">
+                <label>CEDULA(BUS)</label>
+                <input type="tel" id="busqueda-cedula">
+            </div>
+            <div class="form-group">
+                <label>ART(BUS) *</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="busqueda-art" value="MOV"> MOV</label>
+                    <label><input type="radio" name="busqueda-art" value="DC"> DC</label>
+                    <label><input type="radio" name="busqueda-art" value="OTRO"> OTRO</label>
+                </div>
+            </div>
+            <div class="center">
+                <button class="btn btn-back" onclick="volverAOperaciones()">← Atrás</button>
+                <button class="btn btn-primary" id="btn-enviar-busqueda" onclick="enviarDatos('busqueda')" disabled>Enviar</button>
+            </div>
+        </div>
+        
+        <!-- Formulario BUSQUEDA INICIAL -->
+        <div id="form-busqueda-inicial" class="hidden">
+            <h1>BUSCAR ARTÍCULO</h1>
+            <div class="form-group">
+                <label>NUMERO</label>
+                <input type="tel" id="busqueda-inicial-numero" placeholder="Opcional" maxlength="6" pattern="[0-9]{0,6}">
+            </div>
+            <div class="form-group">
+                <label>NOMBRE</label>
+                <input type="text" id="busqueda-inicial-nombre" placeholder="Opcional" pattern="[A-Za-záéíóúÁÉÍÓÚñÑ ]*">
+            </div>
+            <div class="form-group">
+                <label>CEDULA</label>
+                <input type="tel" id="busqueda-inicial-cedula" placeholder="Opcional">
+            </div>
+            <div class="form-group">
+                <label>TIPO ARTÍCULO *</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="busqueda-inicial-art" value="MOV"> MOV</label>
+                    <label><input type="radio" name="busqueda-inicial-art" value="DOC"> DOC</label>
+                    <label><input type="radio" name="busqueda-inicial-art" value="OTRO"> OTRO</label>
+                </div>
+            </div>
+            <div class="center">
+                <button class="btn btn-back" onclick="volverAInicio()">← Atrás</button>
+                <button class="btn btn-primary" id="btn-buscar-inicial" onclick="enviarBusquedaInicial()" disabled>Buscar</button>
+            </div>
+        </div>
+        
+        <!-- Resultados de Búsqueda -->
+        <div id="screen-resultados-busqueda" class="hidden">
+            <h1>RESULTADOS DE BÚSQUEDA</h1>
+            <div id="resultados-container" class="search-results"></div>
+            <div class="center" style="margin-top: 20px;">
+                <button class="btn btn-back" onclick="volverAInicio()">VOLVER A INICIO</button>
+            </div>
+            <div id="resultados-turno-buttons" class="center" style="margin-top: 20px;">
+                <div class="subtitle">Artículo: <span id="resultados-identificador"></span> - Seleccione Turno:</div>
+                <button class="btn btn-turno" onclick="seleccionarTurnoDesdeResultados('1')">TURNO 1</button>
+                <button class="btn btn-turno" onclick="seleccionarTurnoDesdeResultados('2')">TURNO 2</button>
+            </div>
+        </div>
+        
+        <!-- Formulario SALIDA -->
+        <div id="form-salida" class="hidden">
+            <h1>SALIDA</h1>
+            <div class="form-group">
+                <label>NUMERO(SAL) *</label>
+                <input type="tel" id="salida-numero" readonly>
+            </div>
+            <div class="form-group">
+                <label>VALOR(SAL) *</label>
+                <input type="tel" id="salida-valor" placeholder="2-4 dígitos" maxlength="4" pattern="[0-9]{2,4}">
+            </div>
+            <div class="form-group">
+                <label>DESCUENTO(SAL)</label>
+                <input type="tel" id="salida-descuento" placeholder="2-4 dígitos" maxlength="4" pattern="[0-9]{2,4}">
+            </div>
+            <div class="center">
+                <button class="btn btn-back" onclick="volverAOperaciones()">← Atrás</button>
+                <button class="btn btn-primary" id="btn-enviar-salida" onclick="enviarDatos('salida')" disabled>Enviar</button>
+            </div>
+        </div>
+        
+        <!-- Formulario AUMENTO -->
+        <div id="form-aumento" class="hidden">
+            <h1>AUMENTO</h1>
+            <div class="form-group">
+                <label>NUMERO(AUM) *</label>
+                <input type="tel" id="aumento-numero" readonly>
+            </div>
+            <div class="form-group">
+                <label>AUMENTO *</label>
+                <input type="tel" id="aumento-aumento" placeholder="2-4 dígitos" maxlength="4" pattern="[0-9]{2,4}">
+            </div>
+            <div class="form-group">
+                <label>PAGO DE AUMENTO *</label>
+                <input type="tel" id="aumento-pago_aumento" placeholder="2-4 dígitos" maxlength="4" pattern="[0-9]{2,4}">
+            </div>
+            <div class="center">
+                <button class="btn btn-back" onclick="volverAOperaciones()">← Atrás</button>
+                <button class="btn btn-primary" id="btn-enviar-aumento" onclick="enviarDatos('aumento')" disabled>Enviar</button>
+            </div>
+        </div>
+        
+        <!-- Formulario VENTAS -->
+        <div id="form-ventas" class="hidden">
+            <h1>VENTAS</h1>
+            <div class="form-group">
+                <label>NUMERO(VEN) *</label>
+                <input type="tel" id="ventas-numero" readonly>
+            </div>
+            <div class="form-group">
+                <label>VALOR VENTA *</label>
+                <input type="tel" id="ventas-valor_venta" placeholder="2-4 dígitos" maxlength="4" pattern="[0-9]{2,4}">
+            </div>
+            <div class="center">
+                <button class="btn btn-back" onclick="volverAOperaciones()">← Atrás</button>
+                <button class="btn btn-primary" id="btn-enviar-ventas" onclick="enviarDatos('ventas')" disabled>Enviar</button>
+            </div>
+        </div>
+        
+        <!-- Mensajes -->
+        <div id="mensaje-exito" class="hidden success-message">
+            <h2>✅ ENVIADO EXITOSAMENTE</h2>
+            <p>Los datos se han enviado correctamente a n8n</p>
+            <button class="btn btn-primary" onclick="volverAInicio()" style="margin-top: 15px;">Inicio</button>
+        </div>
+        
+        <div id="mensaje-error" class="hidden error-message"></div>
+    </div>
+    
+    <script>
+        // URL de producción
+        const N8N_WEBHOOK_URL = "https://n8n.srv1191353.hstgr.cloud/webhook/c3ca19cc-d4e2-4174-92e7-592bb84bdfd0";
+        
+        // Estado de la aplicación
+        let estado = {
+            identificador: null,
+            turno: null,
+            desdeResultados: false
+        };
+        
+        // Detectar si es móvil
+        const esMovil = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        
+        // Configurar campos numéricos para móvil
+        if (esMovil) {
+            document.addEventListener('DOMContentLoaded', function() {
+                const camposNumericos = document.querySelectorAll('input[type="tel"][pattern*="[0-9]"]');
+                camposNumericos.forEach(campo => {
+                    campo.setAttribute('inputmode', 'numeric');
+                });
+            });
+        }
+        
+        // Funciones de navegación
+        function mostrarPantalla(id) {
+            document.querySelectorAll('[id^="screen"], [id^="form"], [id^="mensaje"]').forEach(el => {
+                el.classList.add('hidden');
+            });
+            document.getElementById(id).classList.remove('hidden');
+        }
+        
+        function volverAInicio() {
+            estado.identificador = null;
+            estado.turno = null;
+            estado.desdeResultados = false;
+            document.getElementById('identificador-input').value = '';
+            mostrarPantalla('screen-inicial');
+        }
+        
+        function volverAOperaciones() {
+            if (estado.desdeResultados) {
+                mostrarPantalla('screen-operaciones');
+            } else {
+                mostrarPantalla('screen-operaciones');
+            }
+        }
+        
+        // Validar identificador (6 dígitos)
+        function procesarIdentificador() {
+            const identificador = document.getElementById('identificador-input').value.trim();
+            if (!identificador || identificador.length !== 6 || !/^\d{6}$/.test(identificador)) {
+                alert('El número identificador debe tener exactamente 6 dígitos');
+                return;
+            }
+            estado.identificador = identificador;
+            mostrarPantalla('screen-turno');
+            document.getElementById('turno-identificador').textContent = identificador;
+        }
+        
+        // Seleccionar turno
+        function seleccionarTurno(turno) {
+            estado.turno = turno;
+            mostrarPantalla('screen-operaciones');
+            document.getElementById('operaciones-identificador').textContent = estado.identificador;
+            document.getElementById('operaciones-turno').textContent = turno;
+        }
+        
+        function seleccionarTurnoDesdeResultados(turno) {
+            estado.turno = turno;
+            estado.desdeResultados = true;
+            mostrarPantalla('screen-operaciones');
+            document.getElementById('operaciones-identificador').textContent = estado.identificador;
+            document.getElementById('operaciones-turno').textContent = turno;
+        }
+        
+        // Mostrar búsqueda inicial
+        function mostrarBusquedaInicial() {
+            // Limpiar formulario de búsqueda inicial
+            document.getElementById('busqueda-inicial-numero').value = '';
+            document.getElementById('busqueda-inicial-nombre').value = '';
+            document.getElementById('busqueda-inicial-cedula').value = '';
+            document.querySelectorAll('input[name="busqueda-inicial-art"]').forEach(radio => {
+                radio.checked = false;
+            });
+            document.getElementById('btn-buscar-inicial').disabled = true;
+            mostrarPantalla('form-busqueda-inicial');
+            configurarValidacionesBusquedaInicial();
+        }
+        
+        // Limpiar formulario
+        function limpiarFormulario(tipo) {
+            const formulario = document.getElementById('form-' + tipo);
+            if (!formulario) return;
+            
+            // Limpiar todos los inputs del formulario (excepto campos readonly que son números identificadores)
+            formulario.querySelectorAll('input[type="text"], input[type="tel"], input[type="number"], textarea').forEach(input => {
+                // Solo limpiar si NO es readonly (los readonly son los números identificadores)
+                if (!input.readOnly) {
+                    input.value = '';
+                }
+            });
+            
+            // Limpiar checkboxes
+            formulario.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            
+            // Limpiar radio buttons
+            formulario.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.checked = false;
+            });
+            
+            // Deshabilitar botones de envío
+            const btnEnviar = formulario.querySelector('[id^="btn-enviar"]');
+            if (btnEnviar) {
+                btnEnviar.disabled = true;
+                if (btnEnviar.textContent && !btnEnviar.textContent.includes('Buscar')) {
+                    btnEnviar.textContent = 'Enviar';
+                }
+            }
+        }
+        
+        // Mostrar formulario
+        function mostrarFormulario(tipo) {
+            // Limpiar TODOS los formularios primero para evitar datos residuales
+            ['ingreso', 'abono', 'pedir_sin_pagar', 'intereses', 'espera', 'busqueda', 'salida', 'aumento', 'ventas'].forEach(form => {
+                limpiarFormulario(form);
+            });
+            
+            // Prellenar número identificador SOLO en el formulario actual
+            const campoNumero = document.getElementById(tipo + '-numero');
+            if (campoNumero && estado.identificador) {
+                campoNumero.value = estado.identificador;
+            }
+            
+            // Mostrar el formulario correspondiente
+            mostrarPantalla('form-' + tipo);
+            
+            // Pequeño delay para asegurar que el DOM esté actualizado
+            setTimeout(() => {
+                // Configurar validaciones según el formulario
+                if (tipo === 'ingreso') {
+                    configurarValidacionesIngreso();
+                } else if (tipo === 'abono') {
+                    configurarValidacionesAbono();
+                } else if (tipo === 'intereses') {
+                    configurarValidacionesIntereses();
+                } else if (tipo === 'salida') {
+                    configurarValidacionesSalida();
+                } else if (tipo === 'aumento') {
+                    configurarValidacionesAumento();
+                } else if (tipo === 'ventas') {
+                    configurarValidacionesVentas();
+                } else if (tipo === 'busqueda') {
+                    configurarValidacionesBusqueda();
+                }
+            }, 10);
+        }
+        
+        // Validaciones
+        function validarNumero2a4Digitos(valor) {
+            if (!valor) return false;
+            return /^\d{2,4}$/.test(valor);
+        }
+        
+        function validarNumero6Digitos(valor) {
+            return /^\d{6}$/.test(valor);
+        }
+        
+        function validarSoloLetras(valor) {
+            if (!valor) return true;
+            return /^[A-Za-záéíóúÁÉÍÓÚñÑ ]+$/.test(valor);
+        }
+        
+        // Configurar validaciones por formulario
+        function configurarValidacionesIngreso() {
+            const campos = ['valor', 'v_retiro', 'nombre_completo', 'cedula'];
+            const artRadio = document.querySelector('input[name="ingreso-art"]:checked');
+            
+            campos.forEach(campo => {
+                const input = document.getElementById('ingreso-' + campo);
+                if (input) {
+                    input.addEventListener('input', validarFormularioIngreso);
+                }
+            });
+            
+            document.querySelectorAll('input[name="ingreso-art"]').forEach(radio => {
+                radio.addEventListener('change', validarFormularioIngreso);
+            });
+            
+            validarFormularioIngreso();
+        }
+        
+        function validarFormularioIngreso() {
+            const valor = document.getElementById('ingreso-valor').value.trim();
+            const v_retiro = document.getElementById('ingreso-v_retiro').value.trim();
+            const nombre = document.getElementById('ingreso-nombre_completo').value.trim();
+            const cedula = document.getElementById('ingreso-cedula').value.trim();
+            const art = document.querySelector('input[name="ingreso-art"]:checked');
+            
+            const valido = validarNumero2a4Digitos(valor) &&
+                          validarNumero2a4Digitos(v_retiro) &&
+                          nombre.length > 0 &&
+                          cedula.length > 0 &&
+                          art !== null;
+            
+            document.getElementById('btn-enviar-ingreso').disabled = !valido;
+        }
+        
+        function configurarValidacionesAbono() {
+            document.getElementById('abono-abono').addEventListener('input', validarFormularioAbono);
+            document.getElementById('abono-descuento').addEventListener('input', validarFormularioAbono);
+            validarFormularioAbono();
+        }
+        
+        function validarFormularioAbono() {
+            const abono = document.getElementById('abono-abono').value.trim();
+            const descuento = document.getElementById('abono-descuento').value.trim();
+            
+            let valido = validarNumero2a4Digitos(abono);
+            if (descuento && !validarNumero2a4Digitos(descuento)) {
+                valido = false;
+            }
+            
+            document.getElementById('btn-enviar-abono').disabled = !valido;
+        }
+        
+        function configurarValidacionesIntereses() {
+            document.getElementById('intereses-intereses').addEventListener('input', validarFormularioIntereses);
+            validarFormularioIntereses();
+        }
+        
+        function validarFormularioIntereses() {
+            const intereses = document.getElementById('intereses-intereses').value.trim();
+            const valido = validarNumero2a4Digitos(intereses);
+            document.getElementById('btn-enviar-intereses').disabled = !valido;
+        }
+        
+        function configurarValidacionesSalida() {
+            document.getElementById('salida-valor').addEventListener('input', validarFormularioSalida);
+            document.getElementById('salida-descuento').addEventListener('input', validarFormularioSalida);
+            validarFormularioSalida();
+        }
+        
+        function validarFormularioSalida() {
+            const valor = document.getElementById('salida-valor').value.trim();
+            const descuento = document.getElementById('salida-descuento').value.trim();
+            
+            let valido = validarNumero2a4Digitos(valor);
+            if (descuento && !validarNumero2a4Digitos(descuento)) {
+                valido = false;
+            }
+            
+            document.getElementById('btn-enviar-salida').disabled = !valido;
+        }
+        
+        function configurarValidacionesAumento() {
+            document.getElementById('aumento-aumento').addEventListener('input', validarFormularioAumento);
+            document.getElementById('aumento-pago_aumento').addEventListener('input', validarFormularioAumento);
+            validarFormularioAumento();
+        }
+        
+        function validarFormularioAumento() {
+            const aumento = document.getElementById('aumento-aumento').value.trim();
+            const pago = document.getElementById('aumento-pago_aumento').value.trim();
+            const valido = validarNumero2a4Digitos(aumento) && validarNumero2a4Digitos(pago);
+            document.getElementById('btn-enviar-aumento').disabled = !valido;
+        }
+        
+        function configurarValidacionesVentas() {
+            document.getElementById('ventas-valor_venta').addEventListener('input', validarFormularioVentas);
+            validarFormularioVentas();
+        }
+        
+        function validarFormularioVentas() {
+            const valor = document.getElementById('ventas-valor_venta').value.trim();
+            const valido = validarNumero2a4Digitos(valor);
+            document.getElementById('btn-enviar-ventas').disabled = !valido;
+        }
+        
+        function configurarValidacionesBusqueda() {
+            document.getElementById('busqueda-numero').addEventListener('input', validarFormularioBusqueda);
+            document.querySelectorAll('input[name="busqueda-art"]').forEach(radio => {
+                radio.addEventListener('change', validarFormularioBusqueda);
+            });
+            validarFormularioBusqueda();
+        }
+        
+        function validarFormularioBusqueda() {
+            const numero = document.getElementById('busqueda-numero').value.trim();
+            const art = document.querySelector('input[name="busqueda-art"]:checked');
+            
+            let valido = art !== null;
+            if (numero && !validarNumero6Digitos(numero)) {
+                valido = false;
+            }
+            
+            document.getElementById('btn-enviar-busqueda').disabled = !valido;
+        }
+        
+        function configurarValidacionesBusquedaInicial() {
+            // La validación ahora se maneja con delegación de eventos global
+            // Solo necesitamos validar el estado actual
+            setTimeout(validarBusquedaInicial, 50);
+        }
+        
+        function validarBusquedaInicial() {
+            const art = document.querySelector('input[name="busqueda-inicial-art"]:checked');
+            const btnBuscar = document.getElementById('btn-buscar-inicial');
+            if (btnBuscar) {
+                btnBuscar.disabled = art === null;
+            }
+        }
+        
+        // Obtener marca temporal
+        function obtenerMarcaTemporal() {
+            const ahora = new Date();
+            const dia = String(ahora.getDate()).padStart(2, '0');
+            const mes = String(ahora.getMonth() + 1).padStart(2, '0');
+            const anio = String(ahora.getFullYear()).slice(-2);
+            const horas = String(ahora.getHours()).padStart(2, '0');
+            const minutos = String(ahora.getMinutes()).padStart(2, '0');
+            return `${dia}/${mes}/${anio} ${horas}:${minutos}`;
+        }
+        
+        // Convertir a mayúsculas
+        function convertirAMayusculas(obj) {
+            const resultado = {};
+            for (const [key, value] of Object.entries(obj)) {
+                if (value === null || value === undefined) {
+                    resultado[key] = "";
+                } else if (typeof value === 'string') {
+                    resultado[key] = value.toUpperCase();
+                } else {
+                    resultado[key] = String(value).toUpperCase();
+                }
+            }
+            return resultado;
+        }
+        
+        // Obtener datos según formulario
+        function obtenerDatosFormulario(tipo) {
+            let datos = {
+                identificador: estado.identificador || '',
+                tipo: tipo,
+                "Marca temporal": obtenerMarcaTemporal(),
+                "TURNO": estado.turno || ""
+            };
+            
+            switch(tipo) {
+                case 'ingreso':
+                    const descripcion = document.getElementById('ingreso-descripcion').value.trim();
+                    datos["VALOR (ING) "] = document.getElementById('ingreso-valor').value.trim();
+                    datos["V RETIRO(ING) "] = document.getElementById('ingreso-v_retiro').value.trim();
+                    datos["NOMBRE COMPLETO(ING) "] = document.getElementById('ingreso-nombre_completo').value.trim();
+                    datos["CEDULA(ING) "] = document.getElementById('ingreso-cedula').value.trim();
+                    datos["ART(ING)"] = document.querySelector('input[name="ingreso-art"]:checked')?.value || '';
+                    datos["DESCRIPCION"] = descripcion || 'nulo';
+                    datos["LLEVAR"] = document.getElementById('ingreso-llevar').checked ? 'NO LLEVAR' : '';
+                    break;
+                    
+                case 'abono':
+                    datos["NUMERO(ABO)"] = document.getElementById('abono-numero').value.trim();
+                    datos["ABONO"] = document.getElementById('abono-abono').value.trim();
+                    datos["DESCUENTO(ABO)"] = document.getElementById('abono-descuento').value.trim();
+                    datos["RETIRO(ABO)"] = document.getElementById('abono-retiro').checked ? 'RETIRAR' : '';
+                    datos["OTROS"] = document.getElementById('abono-otros').value.trim();
+                    break;
+                    
+                case 'pedir_sin_pagar':
+                    datos["numero"] = document.getElementById('pedir_sin_pagar-numero').value.trim();
+                    datos["RETIRO(PEDIR)"] = document.getElementById('pedir_sin_pagar-retiro').checked ? 'RETIRAR' : '';
+                    break;
+                    
+                case 'intereses':
+                    datos["numero"] = document.getElementById('intereses-numero').value.trim();
+                    datos["intereses"] = document.getElementById('intereses-intereses').value.trim();
+                    break;
+                    
+                case 'espera':
+                    datos["numero"] = document.getElementById('espera-numero').value.trim();
+                    datos["esperar"] = document.getElementById('espera-esperar').checked ? 'ESPERAR' : '';
+                    break;
+                    
+                case 'busqueda':
+                    datos["numero"] = document.getElementById('busqueda-numero').value.trim();
+                    datos["nombre_completo"] = document.getElementById('busqueda-nombre_completo').value.trim();
+                    datos["cedula"] = document.getElementById('busqueda-cedula').value.trim();
+                    datos["art"] = document.querySelector('input[name="busqueda-art"]:checked')?.value || '';
+                    break;
+                    
+                case 'salida':
+                    datos["numero"] = document.getElementById('salida-numero').value.trim();
+                    datos["valor"] = document.getElementById('salida-valor').value.trim();
+                    datos["descuento"] = document.getElementById('salida-descuento').value.trim();
+                    break;
+                    
+                case 'aumento':
+                    datos["numero"] = document.getElementById('aumento-numero').value.trim();
+                    datos["aumento"] = document.getElementById('aumento-aumento').value.trim();
+                    datos["pago_aumento"] = document.getElementById('aumento-pago_aumento').value.trim();
+                    break;
+                    
+                case 'ventas':
+                    datos["numero"] = document.getElementById('ventas-numero').value.trim();
+                    datos["valor_venta"] = document.getElementById('ventas-valor_venta').value.trim();
+                    break;
+            }
+            
+            return convertirAMayusculas(datos);
+        }
+        
+        // Enviar datos
+        async function enviarDatos(tipo) {
+            const btnEnviar = document.getElementById('btn-enviar-' + tipo);
+            if (btnEnviar && btnEnviar.disabled) {
+                alert('Por favor complete todos los campos obligatorios correctamente.');
+                return;
+            }
+            
+            if (btnEnviar) {
+                btnEnviar.disabled = true;
+                btnEnviar.textContent = 'Enviando...';
+            }
+            
+            try {
+                const datos = obtenerDatosFormulario(tipo);
+                const params = new URLSearchParams(datos);
+                const response = await fetch(`${N8N_WEBHOOK_URL}?${params}`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    mostrarMensajeExito();
+                } else {
+                    const errorText = await response.text();
+                    mostrarError(`ENVÍO DE INFORMACIÓN FALLIDA\n\nError del servidor: ${response.status}\n${errorText.substring(0, 200)}\n\nPor favor vuelva a intentar enviar los datos.`);
+                    if (btnEnviar) {
+                        btnEnviar.disabled = false;
+                        btnEnviar.textContent = 'Enviar';
+                    }
+                }
+            } catch (error) {
+                mostrarError(`ENVÍO DE INFORMACIÓN FALLIDA\n\nError: ${error.message}\n\nPor favor vuelva a intentar enviar los datos.`);
+                if (btnEnviar) {
+                    btnEnviar.disabled = false;
+                    btnEnviar.textContent = 'Enviar';
+                }
+            }
+        }
+        
+        // Búsqueda inicial
+        async function enviarBusquedaInicial() {
+            const btnBuscar = document.getElementById('btn-buscar-inicial');
+            if (btnBuscar.disabled) {
+                alert('Por favor seleccione el tipo de artículo.');
+                return;
+            }
+            
+            btnBuscar.disabled = true;
+            btnBuscar.textContent = 'Buscando...';
+            
+            try {
+                const datos = {
+                    identificador: document.getElementById('busqueda-inicial-numero').value.trim() || '',
+                    tipo: 'busqueda',
+                    numero: document.getElementById('busqueda-inicial-numero').value.trim(),
+                    nombre_completo: document.getElementById('busqueda-inicial-nombre').value.trim(),
+                    cedula: document.getElementById('busqueda-inicial-cedula').value.trim(),
+                    art: document.querySelector('input[name="busqueda-inicial-art"]:checked')?.value || '',
+                    "Marca temporal": obtenerMarcaTemporal(),
+                    "TURNO": ""
+                };
+                
+                const datosMayusculas = convertirAMayusculas(datos);
+                const params = new URLSearchParams(datosMayusculas);
+                const response = await fetch(`${N8N_WEBHOOK_URL}?${params}`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const respuesta = await response.json();
+                    mostrarResultadosBusqueda(respuesta);
+                } else {
+                    const errorText = await response.text();
+                    mostrarError(`BÚSQUEDA FALLIDA\n\nError: ${errorText.substring(0, 200)}\n\nPor favor vuelva a intentar.`);
+                    btnBuscar.disabled = false;
+                    btnBuscar.textContent = 'Buscar';
+                }
+            } catch (error) {
+                mostrarError(`BÚSQUEDA FALLIDA\n\nError: ${error.message}\n\nPor favor vuelva a intentar.`);
+                btnBuscar.disabled = false;
+                btnBuscar.textContent = 'Buscar';
+            }
+        }
+        
+        // Mostrar resultados de búsqueda
+        function mostrarResultadosBusqueda(respuesta) {
+            let datosArticulo = {};
+            
+            if (Array.isArray(respuesta) && respuesta.length > 0) {
+                datosArticulo = respuesta[0];
+            } else if (typeof respuesta === 'object') {
+                datosArticulo = respuesta;
+            }
+            
+            const campos = [
+                "FECHA", "OPER", "NUMERO", "VR PR", "VR RT", "NOMBRE", "CC", "ART",
+                "DESCRIPCION", "LLEVAR", "VR IN", "TOT IN", "FECHA INT", "VR AB",
+                "FECHA ABON", "ESPERA", "FECHA ESPERA", "RETIROS", "FECHA RETIRO", "DES."
+            ];
+            
+            const container = document.getElementById('resultados-container');
+            container.innerHTML = '';
+            
+            campos.forEach(campo => {
+                const valor = datosArticulo[campo] || datosArticulo[campo.toUpperCase()] || datosArticulo[campo.toLowerCase()] || '';
+                const valorStr = valor ? String(valor) : '';
+                
+                const item = document.createElement('div');
+                item.className = 'result-item';
+                item.innerHTML = `
+                    <span class="result-label">${campo}:</span>
+                    <span class="result-value">${valorStr || '(vacío)'}</span>
+                `;
+                container.appendChild(item);
+            });
+            
+            // Guardar identificador si existe
+            const numero = datosArticulo.NUMERO || datosArticulo.numero || '';
+            if (numero) {
+                estado.identificador = String(numero).trim();
+                document.getElementById('resultados-identificador').textContent = estado.identificador;
+                document.getElementById('resultados-turno-buttons').classList.remove('hidden');
+            } else {
+                document.getElementById('resultados-turno-buttons').classList.add('hidden');
+            }
+            
+            mostrarPantalla('screen-resultados-busqueda');
+        }
+        
+        // Mensajes
+        function mostrarMensajeExito() {
+            mostrarPantalla('mensaje-exito');
+        }
+        
+        function mostrarError(mensaje) {
+            document.getElementById('mensaje-error').textContent = mensaje;
+            document.getElementById('mensaje-error').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('mensaje-error').classList.add('hidden');
+            }, 5000);
+        }
+        
+        // Permitir Enter en campo identificador
+        document.getElementById('identificador-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                procesarIdentificador();
+            }
+        });
+        
+        // Delegación de eventos para validación de números (funciona para elementos dinámicos)
+        document.addEventListener('input', function(e) {
+            if (e.target.matches('input[type="tel"]:not([readonly])')) {
+                e.target.value = e.target.value.replace(/[^0-9]/g, '');
+            }
+        });
+        
+        // Delegación de eventos para validación de letras (funciona para elementos dinámicos)
+        document.addEventListener('input', function(e) {
+            if (e.target.matches('input[type="text"][pattern*="[A-Za-z"]')) {
+                if (!/^[A-Za-záéíóúÁÉÍÓÚñÑ ]*$/.test(e.target.value)) {
+                    e.target.value = e.target.value.slice(0, -1);
+                }
+            }
+        });
+        
+        // Delegación de eventos para validar búsqueda inicial cuando se selecciona un radio
+        document.addEventListener('change', function(e) {
+            if (e.target.matches('input[name="busqueda-inicial-art"]')) {
+                validarBusquedaInicial();
+            }
+        });
+    </script>
+</body>
+</html>
