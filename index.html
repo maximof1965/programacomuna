@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LA COMUNA</title>
+    <title>SCORPION</title>
     <style>
         * {
             margin: 0;
@@ -262,7 +262,7 @@
     <div class="container">
         <!-- Pantalla Inicial -->
         <div id="screen-inicial">
-            <h1>LA COMUNA</h1>
+            <h1>SCORPION</h1>
             <div class="form-group">
                 <label for="identificador-input">Número Identificador del Artículo:</label>
                 <input type="tel" id="identificador-input" placeholder="Ingrese 6 dígitos" maxlength="6" pattern="[0-9]{6}">
@@ -271,11 +271,15 @@
                 <button class="btn btn-primary" onclick="procesarIdentificador()">Continuar</button>
                 <button class="btn btn-secondary" onclick="mostrarBusquedaInicial()">BUSCAR</button>
             </div>
+            <div class="center" style="margin-top: 20px;">
+                <button class="btn btn-secondary" onclick="mostrarTurnoBar()" style="margin-right: 15px;">BAR</button>
+                <button class="btn btn-secondary" onclick="mostrarTurnoGuardadero()">GUARDADERO</button>
+            </div>
         </div>
         
         <!-- Selección de Turno -->
         <div id="screen-turno" class="hidden">
-            <h1>LA COMUNA</h1>
+            <h1>SCORPION</h1>
             <div class="subtitle">Artículo: <span id="turno-identificador"></span></div>
             <div class="subtitle center">Seleccione Turno:</div>
             <div class="center">
@@ -289,7 +293,7 @@
         
         <!-- Botones de Operaciones -->
         <div id="screen-operaciones" class="hidden">
-            <h1>LA COMUNA</h1>
+            <h1>SCORPION</h1>
             <div class="subtitle">Artículo: <span id="operaciones-identificador"></span> | Turno: <span id="operaciones-turno"></span></div>
             <div class="btn-grid">
                 <button class="btn-operation" onclick="mostrarFormulario('ingreso')">INGRESO</button>
@@ -303,13 +307,13 @@
                 <button class="btn-operation" onclick="mostrarFormulario('ventas')">VENTAS</button>
             </div>
             <div class="center" style="margin-top: 20px;">
-                <button class="btn btn-back" onclick="volverAInicio()">← Volver al Inicio</button>
+                <button class="btn btn-back" onclick="volverAInicio()">VOLVER A INICIO</button>
             </div>
         </div>
         
         <!-- Botones de Operaciones desde Resultados de Búsqueda (sin INGRESO ni BUSQUEDA) -->
         <div id="screen-operaciones-desde-busqueda" class="hidden">
-            <h1>LA COMUNA</h1>
+            <h1>SCORPION</h1>
             <div class="subtitle">Artículo: <span id="operaciones-desde-busqueda-identificador"></span> | Turno: <span id="operaciones-desde-busqueda-turno"></span></div>
             <div class="btn-grid">
                 <button class="btn-operation" onclick="mostrarFormulario('abono')">ABONO</button>
@@ -525,10 +529,64 @@
             <div class="center" style="margin-top: 20px;">
                 <button class="btn btn-back" onclick="volverAInicio()">VOLVER A INICIO</button>
             </div>
-            <div id="resultados-turno-buttons" class="center" style="margin-top: 20px;">
+            <div id="resultados-turno-buttons" class="center" style="margin-top: 20px; display: none;">
                 <div class="subtitle">Artículo: <span id="resultados-identificador"></span> - Seleccione Turno:</div>
                 <button class="btn btn-turno" onclick="seleccionarTurnoDesdeResultados('1')">TURNO 1</button>
                 <button class="btn btn-turno" onclick="seleccionarTurnoDesdeResultados('2')">TURNO 2</button>
+            </div>
+        </div>
+        
+        <!-- Selección de Turno para BAR -->
+        <div id="screen-turno-bar" class="hidden">
+            <h1>SCORPION - BAR</h1>
+            <div class="subtitle center">Seleccione Turno:</div>
+            <div class="center">
+                <button class="btn btn-turno" onclick="seleccionarTurnoBar('1')">TURNO 1</button>
+                <button class="btn btn-turno" onclick="seleccionarTurnoBar('2')">TURNO 2</button>
+            </div>
+            <div class="center" style="margin-top: 20px;">
+                <button class="btn btn-back" onclick="volverAInicio()">VOLVER A INICIO</button>
+            </div>
+        </div>
+        
+        <!-- Selección de Turno para GUARDADERO -->
+        <div id="screen-turno-guardadero" class="hidden">
+            <h1>SCORPION - GUARDADERO</h1>
+            <div class="subtitle center">Seleccione Turno:</div>
+            <div class="center">
+                <button class="btn btn-turno" onclick="seleccionarTurnoGuardadero('1')">TURNO 1</button>
+                <button class="btn btn-turno" onclick="seleccionarTurnoGuardadero('2')">TURNO 2</button>
+            </div>
+            <div class="center" style="margin-top: 20px;">
+                <button class="btn btn-back" onclick="volverAInicio()">VOLVER A INICIO</button>
+            </div>
+        </div>
+        
+        <!-- Formulario BAR -->
+        <div id="form-bar" class="hidden">
+            <h1>BAR</h1>
+            <div class="subtitle">Turno: <span id="bar-turno"></span></div>
+            <div class="form-group">
+                <label>VALOR *</label>
+                <input type="text" id="bar-valor" placeholder="1-3 dígitos (ej: 1, 2.5, 100)" inputmode="decimal">
+            </div>
+            <div class="center">
+                <button class="btn btn-back" onclick="mostrarTurnoBar()">← Atrás</button>
+                <button class="btn btn-primary" id="btn-enviar-bar" onclick="enviarDatos('bar')" disabled>Enviar</button>
+            </div>
+        </div>
+        
+        <!-- Formulario GUARDADERO -->
+        <div id="form-guardadero" class="hidden">
+            <h1>GUARDADERO</h1>
+            <div class="subtitle">Turno: <span id="guardadero-turno"></span></div>
+            <div class="form-group">
+                <label>VALOR *</label>
+                <input type="text" id="guardadero-valor" placeholder="1-3 dígitos (ej: 1, 2.5, 100)" inputmode="decimal">
+            </div>
+            <div class="center">
+                <button class="btn btn-back" onclick="mostrarTurnoGuardadero()">← Atrás</button>
+                <button class="btn btn-primary" id="btn-enviar-guardadero" onclick="enviarDatos('guardadero')" disabled>Enviar</button>
             </div>
         </div>
         
@@ -609,7 +667,8 @@
         let estado = {
             identificador: null,
             turno: null,
-            desdeResultados: false
+            desdeResultados: false,
+            listaArticulosBusqueda: null  // Almacena la lista de artículos encontrados en búsqueda
         };
         
         // Detectar si es móvil
@@ -683,6 +742,40 @@
             mostrarPantalla('screen-operaciones');
             document.getElementById('operaciones-identificador').textContent = estado.identificador;
             document.getElementById('operaciones-turno').textContent = turno;
+        }
+        
+        // Mostrar turno para BAR
+        function mostrarTurnoBar() {
+            estado.tipoOperacion = 'bar';
+            mostrarPantalla('screen-turno-bar');
+        }
+        
+        // Seleccionar turno para BAR
+        function seleccionarTurnoBar(turno) {
+            estado.turno = turno;
+            mostrarPantalla('form-bar');
+            document.getElementById('bar-turno').textContent = turno;
+            setTimeout(() => {
+                configurarValidacionesBar();
+                document.getElementById('bar-valor').focus();
+            }, 10);
+        }
+        
+        // Mostrar turno para GUARDADERO
+        function mostrarTurnoGuardadero() {
+            estado.tipoOperacion = 'guardadero';
+            mostrarPantalla('screen-turno-guardadero');
+        }
+        
+        // Seleccionar turno para GUARDADERO
+        function seleccionarTurnoGuardadero(turno) {
+            estado.turno = turno;
+            mostrarPantalla('form-guardadero');
+            document.getElementById('guardadero-turno').textContent = turno;
+            setTimeout(() => {
+                configurarValidacionesGuardadero();
+                document.getElementById('guardadero-valor').focus();
+            }, 10);
         }
         
         function seleccionarTurnoDesdeResultados(turno) {
@@ -762,7 +855,7 @@
         // Mostrar formulario
         function mostrarFormulario(tipo) {
             // Limpiar TODOS los formularios primero para evitar datos residuales
-            ['ingreso', 'abono', 'pedir_sin_pagar', 'intereses', 'espera', 'busqueda', 'salida', 'aumento', 'ventas'].forEach(form => {
+            ['ingreso', 'abono', 'pedir_sin_pagar', 'intereses', 'espera', 'busqueda', 'salida', 'aumento', 'ventas', 'bar', 'guardadero'].forEach(form => {
                 limpiarFormulario(form);
             });
             
@@ -792,6 +885,10 @@
                     configurarValidacionesVentas();
                 } else if (tipo === 'busqueda') {
                     configurarValidacionesBusqueda();
+                } else if (tipo === 'bar') {
+                    configurarValidacionesBar();
+                } else if (tipo === 'guardadero') {
+                    configurarValidacionesGuardadero();
                 }
             }, 10);
         }
@@ -809,6 +906,32 @@
         function validarSoloLetras(valor) {
             if (!valor) return true;
             return /^[A-Za-záéíóúÁÉÍÓÚñÑ ]+$/.test(valor);
+        }
+        
+        // Validar número de 1-3 dígitos antes del punto decimal (puede tener decimales)
+        function validarNumero1a3DigitosDecimal(valor) {
+            if (!valor || !valor.trim()) return false;
+            valor = valor.trim();
+            
+            // Verificar que sea un número válido
+            const numero = parseFloat(valor);
+            if (isNaN(numero) || numero < 0) return false;
+            
+            // Separar parte entera y decimal
+            const partes = valor.split('.');
+            const parteEntera = partes[0];
+            
+            // Validar que la parte entera tenga entre 1 y 3 dígitos
+            if (!/^\d{1,3}$/.test(parteEntera)) return false;
+            
+            // Si hay parte decimal, validar que sea numérica
+            if (partes.length > 1) {
+                const parteDecimal = partes[1];
+                if (!/^\d+$/.test(parteDecimal)) return false;
+                if (partes.length > 2) return false; // Solo un punto decimal
+            }
+            
+            return true;
         }
         
         // Configurar validaciones por formulario
@@ -920,6 +1043,74 @@
             document.getElementById('btn-enviar-ventas').disabled = !valido;
         }
         
+        function configurarValidacionesBar() {
+            const inputValor = document.getElementById('bar-valor');
+            if (inputValor) {
+                inputValor.addEventListener('input', function(e) {
+                    validarEntradaDecimal(e.target);
+                    validarFormularioBar();
+                });
+                validarFormularioBar();
+            }
+        }
+        
+        function validarFormularioBar() {
+            const valor = document.getElementById('bar-valor').value.trim();
+            const valido = validarNumero1a3DigitosDecimal(valor);
+            document.getElementById('btn-enviar-bar').disabled = !valido;
+        }
+        
+        function configurarValidacionesGuardadero() {
+            const inputValor = document.getElementById('guardadero-valor');
+            if (inputValor) {
+                inputValor.addEventListener('input', function(e) {
+                    validarEntradaDecimal(e.target);
+                    validarFormularioGuardadero();
+                });
+                validarFormularioGuardadero();
+            }
+        }
+        
+        function validarFormularioGuardadero() {
+            const valor = document.getElementById('guardadero-valor').value.trim();
+            const valido = validarNumero1a3DigitosDecimal(valor);
+            document.getElementById('btn-enviar-guardadero').disabled = !valido;
+        }
+        
+        // Validar entrada en tiempo real para campos decimales (1-3 dígitos antes del punto)
+        function validarEntradaDecimal(input) {
+            let valor = input.value;
+            const cursorPos = input.selectionStart;
+            
+            // Permitir números, un punto decimal y comas (convertir comas a puntos)
+            valor = valor.replace(',', '.');
+            
+            // Remover caracteres inválidos (solo permitir dígitos y un punto)
+            valor = valor.replace(/[^0-9.]/g, '');
+            
+            // Permitir solo un punto decimal
+            const partes = valor.split('.');
+            if (partes.length > 2) {
+                valor = partes[0] + '.' + partes.slice(1).join('');
+            }
+            
+            // Limitar parte entera a 3 dígitos
+            if (partes.length > 0) {
+                const parteEntera = partes[0];
+                if (parteEntera.length > 3) {
+                    valor = parteEntera.substring(0, 3) + (partes.length > 1 ? '.' + partes[1] : '');
+                }
+            }
+            
+            input.value = valor;
+            
+            // Restaurar posición del cursor
+            if (cursorPos !== undefined) {
+                const newPos = Math.min(cursorPos, input.value.length);
+                input.setSelectionRange(newPos, newPos);
+            }
+        }
+        
         function configurarValidacionesBusqueda() {
             document.getElementById('busqueda-numero').addEventListener('input', validarFormularioBusqueda);
             document.querySelectorAll('input[name="busqueda-art"]').forEach(radio => {
@@ -982,12 +1173,23 @@
         
         // Obtener datos según formulario
         function obtenerDatosFormulario(tipo) {
+            // BAR y GUARDADERO no requieren identificador
+            const requiereIdentificador = tipo !== 'bar' && tipo !== 'guardadero';
+            
             let datos = {
-                identificador: estado.identificador || '',
-                tipo: tipo,
                 "Marca temporal": obtenerMarcaTemporal(),
                 "TURNO": estado.turno || ""
             };
+            
+            // Solo agregar identificador si es requerido
+            if (requiereIdentificador) {
+                datos.identificador = estado.identificador || '';
+            }
+            
+            // El tipo se establece en el switch según el caso
+            if (tipo !== 'bar' && tipo !== 'guardadero') {
+                datos.tipo = tipo;
+            }
             
             switch(tipo) {
                 case 'ingreso':
@@ -1046,6 +1248,16 @@
                 case 'ventas':
                     datos["numero"] = document.getElementById('ventas-numero').value.trim();
                     datos["valor_venta"] = document.getElementById('ventas-valor_venta').value.trim();
+                    break;
+                    
+                case 'bar':
+                    datos["tipo"] = 'BAR';
+                    datos["VALOR"] = document.getElementById('bar-valor').value.trim();
+                    break;
+                    
+                case 'guardadero':
+                    datos["tipo"] = 'GUARDADERO';
+                    datos["VALOR"] = document.getElementById('guardadero-valor').value.trim();
                     break;
             }
             
@@ -1181,6 +1393,12 @@
             tituloCantidad.textContent = `${cantidad} artículo${cantidad !== 1 ? 's' : ''} encontrado${cantidad !== 1 ? 's' : ''}`;
             container.appendChild(tituloCantidad);
             
+            // Crear un contenedor para los radio buttons (usaremos name común para que solo uno pueda estar seleccionado)
+            const radioGroupName = 'articulo-seleccionado';
+            
+            // Guardar lista de artículos para acceso posterior
+            estado.listaArticulosBusqueda = listaArticulos;
+            
             // Mostrar cada artículo encontrado
             listaArticulos.forEach((datosArticulo, idxArticulo) => {
                 // Separador visual entre artículos (excepto el primero)
@@ -1190,11 +1408,43 @@
                     container.appendChild(separador);
                 }
                 
+                // Frame para cada artículo (incluye radio button a la izquierda)
+                const frameArticulo = document.createElement('div');
+                frameArticulo.style.cssText = 'display: flex; align-items: flex-start; margin-bottom: 10px; padding: 10px;';
+                
+                // Radio button a la izquierda
+                const radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = radioGroupName;
+                radio.id = `articulo-${idxArticulo}`;
+                // Obtener número identificador para usarlo como valor
+                let numero = datosArticulo.NUMERO || datosArticulo.numero || datosArticulo.Numero || '';
+                if (!numero) {
+                    for (let key in datosArticulo) {
+                        if (key.toUpperCase() === 'NUMERO') {
+                            numero = datosArticulo[key];
+                            break;
+                        }
+                    }
+                }
+                radio.value = numero ? String(numero).trim() : String(idxArticulo);
+                radio.style.cssText = 'margin-right: 15px; margin-top: 5px; cursor: pointer; width: 20px; height: 20px;';
+                radio.addEventListener('change', function() {
+                    if (this.checked) {
+                        onArticuloSeleccionado(idxArticulo);
+                    }
+                });
+                frameArticulo.appendChild(radio);
+                
+                // Contenedor para el contenido del artículo (título y campos)
+                const contenidoArticulo = document.createElement('div');
+                contenidoArticulo.style.cssText = 'flex: 1;';
+                
                 // Título del artículo
                 const tituloArticulo = document.createElement('div');
-                tituloArticulo.style.cssText = 'color: darkblue; font-weight: bold; margin: 15px 0 10px 0; text-align: center; font-size: 13px;';
+                tituloArticulo.style.cssText = 'color: darkblue; font-weight: bold; margin-bottom: 10px; font-size: 13px;';
                 tituloArticulo.textContent = `--- ARTÍCULO ${idxArticulo + 1} ---`;
-                container.appendChild(tituloArticulo);
+                contenidoArticulo.appendChild(tituloArticulo);
                 
                 // Mostrar todos los campos de este artículo
                 campos.forEach(campo => {
@@ -1203,54 +1453,66 @@
                     
                     const item = document.createElement('div');
                     item.className = 'result-item';
+                    item.style.cssText = 'display: flex; margin-bottom: 5px;';
                     item.innerHTML = `
-                        <span class="result-label">${campo}:</span>
-                        <span class="result-value">${valorStr || '(vacío)'}</span>
+                        <span class="result-label" style="font-weight: bold; margin-right: 10px; min-width: 120px;">${campo}:</span>
+                        <span class="result-value" style="${!valorStr ? 'color: gray;' : ''}">${valorStr || '(vacío)'}</span>
                     `;
-                    container.appendChild(item);
+                    contenidoArticulo.appendChild(item);
                 });
+                
+                frameArticulo.appendChild(contenidoArticulo);
+                container.appendChild(frameArticulo);
             });
             
-            // Guardar identificador del PRIMER artículo si existe
-            if (listaArticulos.length > 0) {
-                const primerArticulo = listaArticulos[0];
-                // Buscar el número en diferentes variaciones de mayúsculas/minúsculas
-                let numero = primerArticulo.NUMERO || primerArticulo.numero || primerArticulo.Numero || '';
-                
-                // Si no se encuentra, buscar en todas las claves
-                if (!numero) {
-                    for (let key in primerArticulo) {
-                        if (key.toUpperCase() === 'NUMERO') {
-                            numero = primerArticulo[key];
-                            break;
-                        }
+            // Inicialmente no hay identificador seleccionado
+            estado.identificador = null;
+            
+            // Ocultar botones de turno inicialmente
+            const resultadosTurnoButtons = document.getElementById('resultados-turno-buttons');
+            if (resultadosTurnoButtons) {
+                resultadosTurnoButtons.style.display = 'none';
+            }
+            
+            // Mostrar pantalla de resultados
+            mostrarPantalla('screen-resultados-busqueda');
+        }
+        
+        // Función que se ejecuta cuando se selecciona un artículo
+        function onArticuloSeleccionado(idxArticulo) {
+            if (!estado.listaArticulosBusqueda || idxArticulo >= estado.listaArticulosBusqueda.length) {
+                return;
+            }
+            
+            const datosArticulo = estado.listaArticulosBusqueda[idxArticulo];
+            
+            // Obtener el número identificador
+            let numero = datosArticulo.NUMERO || datosArticulo.numero || datosArticulo.Numero || '';
+            if (!numero) {
+                for (let key in datosArticulo) {
+                    if (key.toUpperCase() === 'NUMERO') {
+                        numero = datosArticulo[key];
+                        break;
                     }
-                }
-                
-                if (numero) {
-                    estado.identificador = String(numero).trim();
-                    const resultadosIdentificadorEl = document.getElementById('resultados-identificador');
-                    if (resultadosIdentificadorEl) {
-                        resultadosIdentificadorEl.textContent = estado.identificador;
-                    }
-                    const resultadosTurnoButtons = document.getElementById('resultados-turno-buttons');
-                    if (resultadosTurnoButtons) {
-                        resultadosTurnoButtons.classList.remove('hidden');
-                    }
-                } else {
-                    const resultadosTurnoButtons = document.getElementById('resultados-turno-buttons');
-                    if (resultadosTurnoButtons) {
-                        resultadosTurnoButtons.classList.add('hidden');
-                    }
-                }
-            } else {
-                const resultadosTurnoButtons = document.getElementById('resultados-turno-buttons');
-                if (resultadosTurnoButtons) {
-                    resultadosTurnoButtons.classList.add('hidden');
                 }
             }
             
-            mostrarPantalla('screen-resultados-busqueda');
+            // Guardar el identificador actual
+            if (numero) {
+                estado.identificador = String(numero).trim();
+                const resultadosIdentificadorEl = document.getElementById('resultados-identificador');
+                if (resultadosIdentificadorEl) {
+                    resultadosIdentificadorEl.textContent = estado.identificador;
+                }
+            } else {
+                estado.identificador = null;
+            }
+            
+            // Mostrar los botones de turno
+            const resultadosTurnoButtons = document.getElementById('resultados-turno-buttons');
+            if (resultadosTurnoButtons) {
+                resultadosTurnoButtons.style.display = 'block';
+            }
         }
         
         // Mensajes
